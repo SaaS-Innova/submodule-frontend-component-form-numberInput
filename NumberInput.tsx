@@ -61,13 +61,23 @@ export const NumberInput = (props: IFormProps) => {
   ) => {
     if (event.key === ",") {
       const input = event.target as HTMLInputElement;
+      event.preventDefault();
       if (input.value.includes(".")) {
-        event.preventDefault();
         return;
       }
-      event.preventDefault();
-      const newValue = input.value + ".";
-      input.value = newValue;
+      const cursorPosition = input.selectionStart;
+      let newValue: string;
+      if (input.value === "") {
+        input.value = "0."; // Set initial value to '0.' if input is empty
+        input.setSelectionRange(2, 2);
+      } else {
+        newValue =
+          input.value.slice(0, cursorPosition!) +
+          "." +
+          input.value.slice(cursorPosition!);
+        input.value = newValue;
+        input.setSelectionRange(cursorPosition! + 1, cursorPosition! + 1);
+      }
     }
   };
 
