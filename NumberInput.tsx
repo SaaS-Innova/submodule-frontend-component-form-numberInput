@@ -52,6 +52,25 @@ export const NumberInput = (props: IFormProps) => {
     </label>
   );
 
+  /*
+     - Allow only numbers and one dot
+     - Comma is replaced with dot
+     */
+  const convertCommaToDecimal = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (event.key === ",") {
+      const input = event.target as HTMLInputElement;
+      if (input.value.includes(".")) {
+        event.preventDefault();
+        return;
+      }
+      event.preventDefault();
+      const newValue = input.value + ".";
+      input.value = newValue;
+    }
+  };
+
   return (
     <div className={fieldClassName}>
       {fieldType !== IFormFieldType.NO_LABEL && labelElement}
@@ -78,6 +97,7 @@ export const NumberInput = (props: IFormProps) => {
                   min={0}
                   disabled={disabled}
                   useGrouping={false}
+                  onKeyDown={convertCommaToDecimal}
                 />
               );
             }}
