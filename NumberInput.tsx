@@ -6,7 +6,7 @@ import { IFormProps } from "../formInterface/forms.model";
 import { FormFieldError } from "../formFieldError/FormFieldError";
 
 export const NumberInput = (props: IFormProps) => {
-  const { attribute, form, fieldType } = props;
+  const { attribute, form, fieldType, handleChange } = props;
   const { label, placeholder } = form[attribute];
   const {
     required,
@@ -98,6 +98,7 @@ export const NumberInput = (props: IFormProps) => {
                   value={field.value}
                   onChange={(e) => {
                     field.onChange(e.value);
+                    handleChange && handleChange(e.value);
                   }}
                   showButtons={showButtons}
                   maxFractionDigits={decimals ? 2 : 0}
