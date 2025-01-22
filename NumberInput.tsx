@@ -98,7 +98,7 @@ export const NumberInput = (props: IFormProps) => {
                   value={field.value}
                   onChange={(e) => {
                     field.onChange(e.value);
-                    handleChange && handleChange(e.value);
+                    handleChange && handleChange(e);
                   }}
                   showButtons={showButtons}
                   maxFractionDigits={decimals ? 2 : 0}
