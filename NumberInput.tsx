@@ -6,7 +6,7 @@ import { IFormProps } from "../formInterface/forms.model";
 import { FormFieldError } from "../formFieldError/FormFieldError";
 
 export const NumberInput = (props: IFormProps) => {
-  const { attribute, form, fieldType } = props;
+  const { attribute, form, fieldType, handleChange } = props;
   const { label, placeholder } = form[attribute];
   const {
     required,
@@ -54,6 +54,35 @@ export const NumberInput = (props: IFormProps) => {
     </label>
   );
 
+  /*
+     - Allow only numbers and one dot
+     - Comma is replaced with dot
+     */
+  const convertCommaToDecimal = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (event.key === ",") {
+      const input = event.target as HTMLInputElement;
+      event.preventDefault();
+      if (input.value.includes(".")) {
+        return;
+      }
+      const cursorPosition = input.selectionStart;
+      let newValue: string;
+      if (input.value === "") {
+        input.value = "0."; // Set initial value to '0.' if input is empty
+        input.setSelectionRange(2, 2);
+      } else {
+        newValue =
+          input.value.slice(0, cursorPosition!) +
+          "." +
+          input.value.slice(cursorPosition!);
+        input.value = newValue;
+        input.setSelectionRange(cursorPosition! + 1, cursorPosition! + 1);
+      }
+    }
+  };
+
   return (
     <div className={fieldClassName}>
       {fieldType !== IFormFieldType.NO_LABEL && labelElement}
@@ -71,6 +100,7 @@ export const NumberInput = (props: IFormProps) => {
                   value={field.value}
                   onChange={(e) => {
                     field.onChange(e.value);
+                    handleChange && handleChange(e);
                   }}
                   showButtons={showButtons}
                   maxFractionDigits={decimals ? 2 : 0}
@@ -80,6 +110,7 @@ export const NumberInput = (props: IFormProps) => {
                   min={0}
                   disabled={disabled}
                   useGrouping={false}
+                  onKeyDown={convertCommaToDecimal}
                 />
               );
             }}
